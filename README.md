@@ -16,6 +16,10 @@ Docker container for Mapserver
 
  http://localhost:8182/cgi-bin/mapserv
  
- The following url should give the following result: No query information to decode. QUERY_STRING is set, but empty. 
+ The following url should give the following result: No query information to decode. QUERY_STRING is set, but empty.
+
+* To access the map go to the  url below and see all the layer:
+
+  http://localhost:8182/cgi-bin/mapserv?mode=browse&template=openlayers&layers=all&map=/maps/test.map
 
 * When running the container it can also be linked to a postgres container. 
