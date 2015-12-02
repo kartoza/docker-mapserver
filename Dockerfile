@@ -13,7 +13,7 @@ RUN apt-get -qq update --fix-missing && apt-get -qq --yes upgrade
 #-------------Application Specific Stuff ----------------------------------------------------
 
 # Install mapcache compilation prerequisites
-RUN apt-get install -y software-properties-common g++ make cmake wget git openssh-server  bzip2 apache2 apache2-threaded-dev curl apache2-mpm-worker
+RUN apt-get install -y software-properties-common g++ make cmake wget git  bzip2 apache2 apache2-threaded-dev curl apache2-mpm-worker
 
 # Install mapcache dependencies provided by Ubuntu repositories
 RUN apt-get install -y \
