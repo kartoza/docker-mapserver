@@ -4,22 +4,70 @@ Docker container for Mapserver
 
 ## Instructions
 
-* Clone the repo and navigate to the base of the repo
+Pull the image from docker hub:
+```bash
+docker pull kartoza/mapserver
+sudo docker run -d -p 8182:80 -v /web:/map --name mapserving kartoza/mapserver
+```
 
-* Run ./build which will build the mapserver image.
+If you mapfile consist of layer in a postgres database then you need to link the mapserver container to the postgis container.
 
-* Once the image has been build we need to run the image.
+Once the container is running  go to the url below:
+````
+http://localhost:8182/cgi-bin/mapserv
+ ````
+To make sure the url specified above works the web browser should give a response:
+ ```
+No query information to decode. QUERY_STRING is set, but empty.
+ ```
 
-* docker run -d -p 8182:80 -v /web:/map --name mapserving kartoza/mapserver
-
-* Once the container is running we can go to the url below
-
- http://localhost:8182/cgi-bin/mapserv
+A quick way to access the contents of your mapfile in a browser can be achived by :
+```
+http://localhost:8182/cgi-bin/mapserv?mode=browse&template=openlayers&layers=all&map=/maps/test.map
+ ```
+Replace test.map with the name of your mapserver mapfile.
  
- The following url should give the following result: No query information to decode. QUERY_STRING is set, but empty.
+If you want to build the image yourself using the Docker recipe then do the following:
 
-* To access the map go to the  url below and see all the layer:
 
-  http://localhost:8182/cgi-bin/mapserv?mode=browse&template=openlayers&layers=all&map=/maps/test.map
+```bash
+sudo apt-get install apt-cacher-ng
+```
 
-* When running the container it can also be linked to a postgres container. 
+Edit ``71-apt-cacher-ng`` to use your host's ip address.
+
+```bash
+git clone git@github.com:kartoza/docker-mapserver.git
+cd docker-mapserver
+```
+
+
+
+```bash
+sudo ./build.sh
+```
+
+
+Its going to take a long time (and consume a chunk of bandwidth) for the build
+because you have any docker base operating system images on your system.
+
+After it is installed, to run the container using the  command below:
+
+```bash
+sudo docker run -d -p 8182:80 -v /web:/map --name mapserving kartoza/mapserver
+```
+Then from your local machine you go to the url below to test if mapserver is running:
+
+```
+http://localhost:8182/cgi-bin/mapserv
+```
+To make sure the url specified above works the web browser should give a response:
+ ```
+No query information to decode. QUERY_STRING is set, but empty.
+ ```
+
+A quick way to access the contents of your mapfile in a browser can be achived by :
+```
+http://localhost:8182/cgi-bin/mapserv?mode=browse&template=openlayers&layers=all&map=/maps/test.map
+ ```
+
