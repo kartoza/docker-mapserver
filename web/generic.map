@@ -1,0 +1,51 @@
+MAP
+  CONFIG "MS_ERRORFILE" "/tmp/cynolex_error.txt"
+  DEBUG 0
+  NAME "Cynolex"
+  # Map image size
+  SIZE 800 800
+  UNITS meters
+
+  EXTENT -35.137550 -36.618825 64.310591 39.141865
+  FONTSET './fonts/fonts.list'
+  PROJECTION
+    'init=epsg:4326'
+  END #PROJECTION
+
+  IMAGECOLOR -1 -1 -1
+  IMAGEQUALITY 80
+  INCLUDE "outputformats.txt"
+  IMAGETYPE AGG_PNG
+
+   
+  
+  WEB
+   IMAGEPATH '/tmp/'
+   IMAGEURL '/tmp/'
+  
+    METADATA
+      'ows_title'           'VAULT'
+      'ows_srs'             'EPSG:3857 EPSG:4326 EPSG:900913'
+      
+      'wms_feature_info_mime_type' "text/html" 
+      'ows_enable_request'   '*'
+      INCLUDE "owsurl_dhl.txt"
+    END #METADATA
+    TEMPLATE "./templates/cyno.html" 
+  END #WEB
+
+  
+
+ LAYER
+  NAME "General"
+  TYPE RASTER
+  STATUS OFF
+  DATA "data/sa/sa.tif"
+  OFFSITE 0 0 0
+END
+   
+ 
+ 
+END 
+
+
