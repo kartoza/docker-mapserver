@@ -1,0 +1,50 @@
+MAP
+    CONFIG "MS_ERRORFILE" "/tmp/cynolex_error.txt"
+    DEBUG 5
+    NAME "Cynolex"
+    # Map image size
+    SIZE 800 800
+    UNITS meters
+    SHAPEPATH  "/map/"
+
+    EXTENT -35.137550 -36.618825 64.310591 39.141865
+    PROJECTION
+        'init=epsg:4326'
+    END #PROJECTION
+
+    IMAGECOLOR -1 -1 -1
+    IMAGEQUALITY 80
+    IMAGETYPE PNG
+
+    WEB
+        IMAGEPATH '/tmp/'
+        IMAGEURL '/tmp/'
+
+        METADATA
+          'ows_title'           'Cynolakes'
+          'ows_srs'             'EPSG:3857 EPSG:4326 EPSG:900913'      
+          'wms_feature_info_mime_type' "text/html" 
+          'ows_enable_request'   '*'
+        END 
+    END 
+     
+
+    LAYER
+        NAME "cynolakes_redband"
+        TYPE RASTER
+        STATUS  DEFAULT
+        DATA "HDF5:/map/MER_FSG_1PNEPA20030129_074733_000001012013_00221_04784_8508_Vaal_chlora.h5://bands/redBand"  
+        PROCESSING "SCALE=AUTO"
+        PROCESSING "NODATA=-9999"     
+        #TRANSPARENCY 100
+        PROCESSING "RESAMPLE=NEAREST"
+        
+    END
+
+   
+       
+ 
+ 
+END 
+
+
