@@ -28,7 +28,8 @@ RUN apt-get install -y \
     libcurl4-gnutls-dev \
     libexempi-dev \
     libgdal-dev \
-    libgeos-dev
+    libgeos-dev \
+    gdal-bin
 
 ADD resources /tmp/resources
 

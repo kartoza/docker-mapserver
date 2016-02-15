@@ -7,7 +7,7 @@ Docker container for Mapserver
 Pull the image from docker hub:
 ```bash
 docker pull kartoza/mapserver
-sudo docker run -d -p 8182:80 -v /web:/map --name mapserving kartoza/mapserver
+sudo docker run -d -p 8182:80 -v `pwd`/web:/map --name mapserving kartoza/mapserver
 ```
 
 If you mapfile consist of layer in a postgres database then you need to link the mapserver container to the postgis container.
@@ -23,7 +23,7 @@ No query information to decode. QUERY_STRING is set, but empty.
 
 A quick way to access the contents of your mapfile in a browser can be achived by :
 ```
-http://localhost:8182/cgi-bin/mapserv?mode=browse&template=openlayers&layers=all&map=/maps/test.map
+http://localhost:8182/cgi-bin/mapserv?mode=browse&template=openlayers&layers=all&map=/map/generic.map
  ```
 Replace test.map with the name of your mapserver mapfile.
  
