@@ -21,7 +21,9 @@ To enter the container with a bash interface simple switch from _daemon_ mode to
 
 There you'll see the mapped /map folder and can use the useful cli tool like 
 * `mapserv` http://www.mapserver.org/utilities/
-* `gdal` http://www.gdal.org/
+* `gdal` raster utilities: http://www.gdal.org/gdal_utilities.html
+* `ogr` vector utilities: http://www.gdal.org/ogr_utilities.html
+
 
 ## access via http
 
