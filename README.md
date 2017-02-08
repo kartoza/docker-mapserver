@@ -4,22 +4,26 @@ Docker container for Mapserver
 
 ## Instructions
 
-## build
+## build image
 
 ```docker build -t mapserver .```
 
-## start
+## start container
 ```docker run -d -p 8182:80 -v `pwd`/map:/map mapserver```
 
 while the command is<br/>
 `docker run -d -p [exposed port]:[internal port] -v [your-path]:[container-path] mapserver` 
 
-To step into the container simple switch from _daemon_ mode to _interactive_ mode<br/>
-```docker run -it -p 8182:80 -v `pwd`/map:/map mapserver bash```
+## enter via bash
 
-If your mapfile consist of layer in a postgres database then you need to link the mapserver container to the postgis container.
+To enter the container with a bash interface simple switch from _daemon_ mode to _interactive_ mode<br/>
+```docker run -it -v `pwd`/map:/map mapserver bash```
 
-## access
+There you'll see the mapped /map folder and can use the useful cli tool like 
+* `mapserv` http://www.mapserver.org/utilities/
+* `gdal` http://www.gdal.org/
+
+## access via http
 
 When Docker is forwarded as _localhost_ simply open the following URL:<br/> 
 `http://localhost:8182/cgi-bin/mapserv`
