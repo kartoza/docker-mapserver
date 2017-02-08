@@ -2,8 +2,6 @@
 
 Docker container for Mapserver
 
-## Instructions
-
 ## build image
 
 ```docker build -t mapserver .```
