@@ -21,24 +21,24 @@ MAP
         IMAGEURL '/tmp/'
 
         METADATA
-          'ows_title'           'Cynolakes'
+          'ows_title'           'Generic Map'
           'ows_srs'             'EPSG:3857 EPSG:4326 EPSG:900913'      
           'wms_feature_info_mime_type' "text/html" 
           'ows_enable_request'   '*'
         END 
     END 
-     
 
     LAYER
-        NAME "cynolakes_redband"
+        NAME "GTOPO30_SAMPLE"
+        METADATA
+          'ows_title' 'GTOPO30 Sample'
+        END
         TYPE RASTER
         STATUS  DEFAULT
-        DATA "HDF5:/map/MER_FSG_1PNEPA20030129_074733_000001012013_00221_04784_8508_Vaal_chlora.h5://bands/redBand"  
+        DATA "E020N40.tif"
         PROCESSING "SCALE=AUTO"
-        PROCESSING "NODATA=-9999"     
-        #TRANSPARENCY 100
+        PROCESSING "NODATA=-9999"
         PROCESSING "RESAMPLE=NEAREST"
-        
     END
 
 END 
