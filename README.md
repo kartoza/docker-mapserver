@@ -4,13 +4,13 @@ Docker container for Mapserver
 
 ## Instructions
 
-Pull the image from docker hub:
+Build and run the docker image:
 ```bash
-docker pull kartoza/mapserver
-sudo docker run -d -p 8182:80 -v `pwd`/web:/map --name mapserving kartoza/mapserver
+docker build -t mapserver .
+docker run -d -p 8182:80 -v `pwd`/web:/map mapserver
 ```
 
-If you mapfile consist of layer in a postgres database then you need to link the mapserver container to the postgis container.
+If your mapfile consist of layer in a postgres database then you need to link the mapserver container to the postgis container.
 
 Once the container is running  go to the url below:
 ````
