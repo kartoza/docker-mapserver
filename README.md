@@ -25,7 +25,7 @@ A quick way to access the contents of your mapfile in a browser can be achived b
 ```
 http://localhost:8182/cgi-bin/mapserv?mode=browse&template=openlayers&layers=all&map=/map/generic.map
  ```
-Replace test.map with the name of your mapserver mapfile.
+Replace generic.map with the name of your mapserver mapfile.
  
 If you want to build the image yourself using the Docker recipe then do the following:
 
