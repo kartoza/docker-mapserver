@@ -34,6 +34,6 @@ A quick way to access the contents of your mapfile in a browser can be achived b
 `http://localhost:8182/cgi-bin/mapserv?map=/map/generic.map&mode=browse&template=openlayers&layers=all`
 
 The displayed map should look like that:<br/>
-![Generic-Map Browse-Mode Screenshot](generic-map-browse-mode-screenshot.png =250x "Generic-Map Browse-Mode Screenshot")
+![Generic-Map Browse-Mode Screenshot](generic-map-browse-mode-screenshot.png "Generic-Map Browse-Mode Screenshot" =250x)
 
 Replace generic.map with the name of your mapserver mapfile.
