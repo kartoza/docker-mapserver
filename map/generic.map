@@ -6,6 +6,8 @@ MAP
     UNITS meters
     SHAPEPATH  "/map/"
 
+    SYMBOLSET symbolset.txt
+
     EXTENT 20.0 -10.0 60.0 40.0
     PROJECTION
         'init=epsg:4326'
@@ -39,6 +41,25 @@ MAP
         PROCESSING "NODATA=-9999"
         PROCESSING "RESAMPLE=NEAREST"
     END
+
+    LAYER
+      NAME "airports"
+      EXTENT -90 -180 90 180
+      PROJECTION
+         "init=epsg:4326"
+      END
+      DATA 'airports/ne_10m_airports.shp'
+      STATUS ON
+      TYPE POINT
+      CLASS
+        STYLE
+           SIZE 10
+           WIDTH 10
+           COLOR 255 0 0
+           OUTLINECOLOR 0 255 0
+        END # STYLE
+      END # CLASS
+    END # LAYER
 
 END 
 
