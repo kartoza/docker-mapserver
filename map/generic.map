@@ -53,8 +53,9 @@ MAP
       TYPE POINT
       CLASS
         STYLE
+           SYMBOL 'circlef'
            SIZE 10
-           WIDTH 10
+           WIDTH 1
            COLOR 255 0 0
            OUTLINECOLOR 0 255 0
         END # STYLE
