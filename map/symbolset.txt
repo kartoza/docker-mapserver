@@ -1,0 +1,49 @@
+SYMBOLSET
+  SYMBOL
+    NAME "o-flag-trans"
+    TYPE pixmap
+    IMAGE "o-flag-trans.png"
+  END # SYMBOL
+
+  SYMBOL
+    NAME "circlef"
+    TYPE ellipse
+    FILLED true
+    POINTS
+      10 10
+    END # POINTS
+  END # SYMBOL
+
+  SYMBOL
+    NAME "P"
+    TYPE truetype
+    FONT "arial"
+    CHARACTER "P"
+  END # SYMBOL
+
+  SYMBOL
+    NAME "v-line"
+    TYPE vector
+    FILLED false
+    POINTS
+      0  0
+      5  10
+      10 0
+    END # POINTS
+  END # SYMBOL
+
+  SYMBOL
+    NAME "v-poly"
+    TYPE vector
+    FILLED true
+    POINTS
+      0  0
+      3.5 8
+      7 0
+      5.2 0
+      3.5 4
+      1.8 0
+      0 0
+    END # POINTS
+  END # SYMBOL
+END # SYMBOLSET

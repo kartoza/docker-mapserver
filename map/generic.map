@@ -1,0 +1,67 @@
+MAP
+    CONFIG "MS_ERRORFILE" "/tmp/generic_map_error.txt"
+    DEBUG 5
+    NAME "GENERIC_MAP"
+    SIZE 800 800
+    UNITS meters
+    SHAPEPATH  "/map/"
+
+    SYMBOLSET symbolset.txt
+
+    EXTENT 20.0 -10.0 60.0 40.0
+    PROJECTION
+        'init=epsg:4326'
+    END #PROJECTION
+
+    IMAGECOLOR -1 -1 -1
+    IMAGEQUALITY 80
+    IMAGETYPE PNG
+
+    WEB
+        IMAGEPATH '/tmp/'
+        IMAGEURL '/tmp/'
+
+        METADATA
+          'ows_title'           'Generic Map'
+          'ows_srs'             'EPSG:3857 EPSG:4326 EPSG:900913'      
+          'wms_feature_info_mime_type' "text/html" 
+          'ows_enable_request'   '*'
+        END 
+    END 
+
+    LAYER
+        NAME "GTOPO30_SAMPLE"
+        METADATA
+          'ows_title' 'GTOPO30 Sample'
+        END
+        TYPE RASTER
+        STATUS  OFF
+        DATA "E020N40.tif"
+        PROCESSING "SCALE=AUTO"
+        PROCESSING "NODATA=-9999"
+        PROCESSING "RESAMPLE=NEAREST"
+    END
+
+    LAYER
+      NAME "airports"
+      EXTENT -90 -180 90 180
+      PROJECTION
+         "init=epsg:4326"
+      END
+      DATA 'airports/ne_10m_airports.shp'
+      STATUS ON
+      TYPE POINT
+      CLASS
+        STYLE
+           SYMBOL 'circlef'
+           SIZE 10
+           WIDTH 1
+           COLOR 255 0 0
+           OUTLINECOLOR 0 255 0
+        END # STYLE
+      END # CLASS
+    END # LAYER
+
+END 
+
+
