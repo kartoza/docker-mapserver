@@ -43,7 +43,8 @@ if [  ! -d /tmp/resources/mapserver ]; then \
         -DWITH_GIF=1 \
         -DWITH_EXEMPI=1 \
         -DWITH_XMLMAPFILE=1 \
-    -DWITH_FCGI=0 && \
+        -DWITH_PROTOBUFC=0 \
+        -DWITH_FCGI=0 && \
     make && \
     make install && \
     ldconfig
