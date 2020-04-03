@@ -1,19 +1,38 @@
 #!/bin/bash
 
 #Install libharfbuzz from source as it is not in a repository
+if [[ ! -f /tmp/resources/curl-7.50.0.tar.gz ]]; then \
+  wget -c https://curl.haxx.se/download/curl-7.50.0.tar.gz -P /tmp/resources/; \
+fi;\
+cd /tmp/resources && \
+tar -zxvf curl-7.50.0.tar.gz && \
+cd curl-7.50.0 && \
+./configure --with-ssl=/usr/local/ssl --enable-ares --enable-versioned-symbols && \
+make -j 4 install
 
-VERSION=harfbuzz-0.9.19.tar.bz2
-if [ ! -f /tmp/resources/harfbuzz-0.9.19.tar.bz2 ]; then \
-    wget http://www.freedesktop.org/software/harfbuzz/release/harfbuzz-0.9.19.tar.bz2 -P /tmp/resources/; \
+#export PYCURL_SSL_LIBRARY=openssl;export PYCURL_CURL_CONFIG=/usr/local/bin/curl-config
+#export LD_LIBRARY_PATH=/usr/local/lib
+ldconfig
+#export PYCURL_SSL_LIBRARY=openssl
+#export PYCURL_CURL_CONFIG=/usr/local/bin/curl-config
+#export LD_LIBRARY_PATH=/usr/local/lib
+
+pip3 install --compile pycurl
+#Install libharfbuzz from source as it is not in a repository
+
+VERSION=2.6.4
+if [ ! -f /tmp/resources/harfbuzz-${VERSION}.tar.xz ]; then \
+    wget -c https://www.freedesktop.org/software/harfbuzz/release/harfbuzz-${VERSION}.tar.xz -P /tmp/resources/; \
     fi; \
     cd /tmp/resources &&\
-    tar xjf harfbuzz-0.9.19.tar.bz2  &&\
-    cd harfbuzz-0.9.19 && \
+    tar -xf harfbuzz-${VERSION}.tar.xz  &&\
+    cd harfbuzz-${VERSION} && \
     ./configure  && \
-    make  && \
+    make -j 4 && \
     make install  && \
     ldconfig
 
+# TODO add in the compile --with-curl-config=/usr/bin/curl-config \
 if [  ! -d /tmp/resources/mapserver ]; then \
     git clone https://github.com/mapserver/mapserver /tmp/resources/mapserver; \
     fi;\
@@ -43,7 +62,11 @@ if [  ! -d /tmp/resources/mapserver ]; then \
         -DWITH_GIF=1 \
         -DWITH_EXEMPI=1 \
         -DWITH_XMLMAPFILE=1 \
-    -DWITH_FCGI=0 && \
+        -DWITH_PHP=ON \
+        -DWITH_PYTHON=ON \
+        -DWITH_PERL=ON \
+        -DWITH_PROTOBUFC=0 \
+        -DWITH_FCGI=0 && \
     make && \
     make install && \
     ldconfig

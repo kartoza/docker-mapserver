@@ -4,13 +4,13 @@ Docker container for Mapserver
 
 ## build image
 
-```docker build -t mapserver .```
+```docker build  -t kartoza/mapserver .```
 
 ## start container
-```docker run -d -p 8182:80 -v `pwd`/map:/map mapserver```
+```docker run -d -p 8182:80 -v `pwd`/map:/map kartoza/mapserver```
 
 while the command is<br/>
-`docker run -d -p [exposed port]:[internal port] -v [your-path]:[container-path] mapserver` 
+`docker run -d -p [exposed port]:[internal port] -v [your-path]:[container-path] kartoza/mapserver` 
 
 ## access container via http
 

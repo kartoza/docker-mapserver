@@ -1,9 +1,19 @@
 # Mapserver for Docker
-FROM ubuntu:trusty
+FROM osgeo/gdal:ubuntu-small-latest
+
 MAINTAINER Admire Nyakudya<admire@kartoza.com>
 
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get clean && apt-get update && apt-get install -y locales
 ENV LANG C.UTF-8
 RUN update-locale LANG=C.UTF-8
+
+RUN set -e \
+    export DEBIAN_FRONTEND=noninteractive \
+    dpkg-divert --local --rename --add /sbin/initctl \
+    && (echo "Yes, do as I say!" | apt-get remove --force-yes login) \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Update and upgrade system
 RUN apt-get -qq update --fix-missing && apt-get -qq --yes upgrade
@@ -13,7 +23,15 @@ RUN apt-get -qq update --fix-missing && apt-get -qq --yes upgrade
 #-------------Application Specific Stuff ----------------------------------------------------
 
 # Install mapcache compilation prerequisites
-RUN apt-get install -y software-properties-common g++ make cmake wget git  bzip2 apache2 apache2-threaded-dev curl apache2-mpm-worker
+RUN apt-get install -y software-properties-common g++ make cmake wget git  bzip2 apache2 apache2-dev \
+build-essential  curl openssl autoconf gtk-doc-tools libc-ares-dev libc-ares-dev libpdf-api2-perl python3-pip \
+swig protobuf-compiler
+RUN apt -y install libboost-tools-dev libboost-thread1.62-dev magics++
+
+RUN add-apt-repository -y ppa:ondrej/php
+RUN  apt-get update
+RUN apt install -y php7.3 php7.3-common php7.3-opcache php7.3-cli php7.3-gd php7.3-curl php7.3-fpm \
+libapache2-mod-php7.3   php7.3-fpm php
 
 # Install mapcache dependencies provided by Ubuntu repositories
 RUN apt-get install -y \
@@ -25,11 +43,12 @@ RUN apt-get install -y \
     librsvg2-dev \
     libmysqlclient-dev \
     libpq-dev \
-    libcurl4-gnutls-dev \
+    #libcurl4-gnutls-dev \
     libexempi-dev \
     libgdal-dev \
-    libgeos-dev \
-    gdal-bin
+    libfcgi-dev \
+    libpsl-dev \
+    libharfbuzz-dev
 
 ADD resources /tmp/resources
 
@@ -38,23 +57,24 @@ RUN chmod 0755 /setup.sh
 RUN /setup.sh
 
 
+
 # Configure localhost in Apache
 RUN cp  /tmp/resources/000-default.conf /etc/apache2/sites-available/
 
 # To be able to install libapache.
-RUN echo 'deb http://archive.ubuntu.com/ubuntu trusty multiverse' >> /etc/apt/sources.list
-RUN echo 'deb http://archive.ubuntu.com/ubuntu trusty-updates multiverse' >> /etc/apt/sources.list
-RUN echo 'deb http://security.ubuntu.com/ubuntu trusty-security multiverse' >> /etc/apt/sources.list
-RUN  apt-get update
 
-# Install PHP5 and necessary modules
-RUN  apt-get install -y libapache2-mod-fastcgi php5-fpm libapache2-mod-php5 php5-common php5-cli php5-fpm php5
 
-# Enable these Apache modules
-RUN  a2enmod actions cgi alias
+
+
 
 # Apache configuration for PHP-FPM
 RUN cp /tmp/resources/php5-fpm.conf /etc/apache2/conf-available/
+
+# Enable these Apache modules
+RUN  a2enmod actions  alias  proxy_fcgi setenvif
+RUN a2enconf php7.3-fpm
+
+RUN service apache2 restart
 
 # Link to cgi-bin executable
 RUN chmod o+x /usr/local/bin/mapserv
@@ -64,5 +84,6 @@ RUN chmod 755 /usr/lib/cgi-bin
 EXPOSE  80
 
 ENV HOST_IP `ifconfig | grep inet | grep Mask:255.255.255.0 | cut -d ' ' -f 12 | cut -d ':' -f 2`
+RUN rm -r /tmp/resources
 
 CMD apachectl -D FOREGROUND
