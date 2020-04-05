@@ -79,8 +79,7 @@ if [  ! -d /tmp/resources/mapserver ]; then \
         -DWITH_PHPNG=1 \
         -DWITH_PIXMAN=1 \
         -DWITH_FCGI=1 && \
-    make && \
-    make install && \
+    make -j 4 install  && \
     ldconfig
 
 echo "ServerName localhost" >> /etc/apache2/apache2.conf
