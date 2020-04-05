@@ -52,7 +52,9 @@ RUN apt-get install -y \
     libgif-dev \
     libfcgi-dev \
     libjpeg62-dev \
-    libproj-dev
+    libproj-dev \
+    libcairo2-dev \
+    libprotobuf-dev
 
 #RUN apt -y install libboost-tools-dev libboost-thread1.62-dev magics++
 ADD resources /tmp/resources

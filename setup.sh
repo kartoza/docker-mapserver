@@ -77,7 +77,8 @@ if [  ! -d /tmp/resources/mapserver ]; then \
         -DWITH_PERL=ON \
         -DWITH_PROTOBUFC=0 \
         -DWITH_PHPNG=1 \
-        -DWITH_FCGI=0 && \
+        -DWITH_PIXMAN=1 \
+        -DWITH_FCGI=1 && \
     make && \
     make install && \
     ldconfig
