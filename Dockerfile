@@ -32,8 +32,10 @@ RUN add-apt-repository -y ppa:ondrej/php
 RUN  apt-get update; apt install -y php7.3 php7.3-common php7.3-opcache php7.3-cli php7.3-gd php7.3-curl php7.3-fpm \
 libapache2-mod-php7.3   php7.3-fpm php php7.3-dev
 
+
+
 # Install mapcache dependencies provided by Ubuntu repositories
-RUN apt-get install -y \
+RUN apt-get install -y --fix-missing --no-install-recommends \
     libxml2-dev \
     libxslt1-dev \
     libproj-dev \
@@ -44,7 +46,6 @@ RUN apt-get install -y \
     libpq-dev \
     libcurl4-gnutls-dev \
     libexempi-dev \
-    libgdal-dev \
     libfcgi-dev \
     libpsl-dev \
     libharfbuzz-dev \

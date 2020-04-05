@@ -12,12 +12,12 @@ make -j 4 install
 
 #export PYCURL_SSL_LIBRARY=openssl;export PYCURL_CURL_CONFIG=/usr/local/bin/curl-config
 #export LD_LIBRARY_PATH=/usr/local/lib
-ldconfig
+#ldconfig
 #export PYCURL_SSL_LIBRARY=openssl
 #export PYCURL_CURL_CONFIG=/usr/local/bin/curl-config
 #export LD_LIBRARY_PATH=/usr/local/lib
 
-pip3 install --compile pycurl
+#pip3 install --compile pycurl
 #Install libharfbuzz from source as it is not in a repository
 VERSION=2.6.4
 if [ ! -f /tmp/resources/harfbuzz-${VERSION}.tar.xz ]; then \
@@ -38,7 +38,7 @@ fi; \
 cd /tmp/resources && \
 tar xjf geos-${GEOS_VERSION}.tar.bz2 && \
 cd geos-${GEOS_VERSION} && \
-./configure --enable-python && \
+./configure  && \
 make -j 4 install
 
 # Compile mapserver
