@@ -19,19 +19,29 @@ ldconfig
 
 pip3 install --compile pycurl
 #Install libharfbuzz from source as it is not in a repository
-
 VERSION=2.6.4
 if [ ! -f /tmp/resources/harfbuzz-${VERSION}.tar.xz ]; then \
-    wget -c https://www.freedesktop.org/software/harfbuzz/release/harfbuzz-${VERSION}.tar.xz -P /tmp/resources/; \
+    wget -c https://github.com/harfbuzz/harfbuzz/releases/download/${VERSION}/harfbuzz-${VERSION}.tar.xz -P /tmp/resources/; \
     fi; \
     cd /tmp/resources &&\
     tar -xf harfbuzz-${VERSION}.tar.xz  &&\
     cd harfbuzz-${VERSION} && \
     ./configure  && \
-    make -j 4 && \
-    make install  && \
+    make -j4 install && \
     ldconfig
 
+# Compile geos
+GEOS_VERSION=3.8.1
+if [[ ! -f /tmp/resources/geos-${GEOS_VERSION}.tar.bz2 ]]; then \
+wget http://download.osgeo.org/geos/geos-${GEOS_VERSION}.tar.bz2 -P /tmp/resources/; \
+fi; \
+cd /tmp/resources && \
+tar xjf geos-${GEOS_VERSION}.tar.bz2 && \
+cd geos-${GEOS_VERSION} && \
+./configure --enable-python && \
+make -j 4 install
+
+# Compile mapserver
 # TODO add in the compile --with-curl-config=/usr/bin/curl-config \
 if [  ! -d /tmp/resources/mapserver ]; then \
     git clone https://github.com/mapserver/mapserver /tmp/resources/mapserver; \
