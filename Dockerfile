@@ -30,7 +30,7 @@ swig protobuf-compiler
 
 RUN add-apt-repository -y ppa:ondrej/php
 RUN  apt-get update; apt install -y php7.3 php7.3-common php7.3-opcache php7.3-cli php7.3-gd php7.3-curl php7.3-fpm \
-libapache2-mod-php7.3   php7.3-fpm php
+libapache2-mod-php7.3   php7.3-fpm php php7.3-dev
 
 # Install mapcache dependencies provided by Ubuntu repositories
 RUN apt-get install -y \

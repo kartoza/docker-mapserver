@@ -76,6 +76,7 @@ if [  ! -d /tmp/resources/mapserver ]; then \
         -DWITH_PYTHON=ON \
         -DWITH_PERL=ON \
         -DWITH_PROTOBUFC=0 \
+        -DWITH_PHPNG=1 \
         -DWITH_FCGI=0 && \
     make && \
     make install && \
