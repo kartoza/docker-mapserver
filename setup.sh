@@ -42,14 +42,15 @@ cd geos-${GEOS_VERSION} && \
 make -j 4 install
 
 # Compile mapserver
-# TODO add in the compile --with-curl-config=/usr/bin/curl-config \
+# TODO add in the compile --with-curl-config=/usr/bin/curl-config -with_proj=usr/local \
 if [  ! -d /tmp/resources/mapserver ]; then \
     git clone https://github.com/mapserver/mapserver /tmp/resources/mapserver; \
     fi;\
     mkdir -p /tmp/resources/mapserver/build && \
-    cd /tmp/resources/mapserver/build && \
+    cd /tmp/resources/mapserver && \
+    git checkout ${MAPSERVER_VERSION} && \
+    cd ./build && \
     cmake /tmp/resources/mapserver/ -DWITH_THREAD_SAFETY=1 \
-        -DWITH_PROJ=1 \
         -DWITH_KML=1 \
         -DWITH_SOS=1 \
         -DWITH_WMS=1 \
@@ -61,8 +62,6 @@ if [  ! -d /tmp/resources/mapserver ]; then \
         -DWITH_MYSQL=1 \
         -DWITH_GEOS=1 \
         -DWITH_POSTGIS=1 \
-        -DWITH_GDAL=1 \
-        -DWITH_OGR=1 \
         -DWITH_CURL=1 \
         -DWITH_CLIENT_WMS=1 \
         -DWITH_CLIENT_WFS=1 \
@@ -78,6 +77,7 @@ if [  ! -d /tmp/resources/mapserver ]; then \
         -DWITH_PROTOBUFC=0 \
         -DWITH_PHPNG=1 \
         -DWITH_PIXMAN=1 \
+        -DWITH_PROTOBUFC=1 \
         -DWITH_FCGI=1 && \
     make -j 4 install  && \
     ldconfig

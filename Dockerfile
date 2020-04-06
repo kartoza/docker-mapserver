@@ -25,7 +25,7 @@ RUN apt-get -qq update --fix-missing && apt-get -qq --yes upgrade
 # Install mapcache compilation prerequisites
 RUN apt-get install -y software-properties-common g++ make cmake wget git  bzip2 apache2 apache2-dev \
 build-essential  curl openssl autoconf gtk-doc-tools libc-ares-dev libc-ares-dev libpdf-api2-perl python3-pip \
-swig protobuf-compiler
+swig protobuf-compiler python-setuptools libprotobuf-c-dev protobuf-c-compiler
 
 
 RUN add-apt-repository -y ppa:ondrej/php
@@ -38,7 +38,6 @@ libapache2-mod-php7.3   php7.3-fpm php php7.3-dev
 RUN apt-get install -y --fix-missing --no-install-recommends \
     libxml2-dev \
     libxslt1-dev \
-    libproj-dev \
     libfribidi-dev \
     libcairo2-dev \
     librsvg2-dev \
@@ -57,6 +56,7 @@ RUN apt-get install -y --fix-missing --no-install-recommends \
     libcairo2-dev \
     libprotobuf-dev
 
+ARG MAPSERVER_VERSION=branch-7-4
 #RUN apt -y install libboost-tools-dev libboost-thread1.62-dev magics++
 ADD resources /tmp/resources
 
