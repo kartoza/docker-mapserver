@@ -2,13 +2,15 @@
 
 #Install libharfbuzz from source as it is not in a repository
 
-VERSION=harfbuzz-0.9.19.tar.bz2
-if [ ! -f /tmp/resources/harfbuzz-0.9.19.tar.bz2 ]; then \
-    wget http://www.freedesktop.org/software/harfbuzz/release/harfbuzz-0.9.19.tar.bz2 -P /tmp/resources/; \
+#VERSION=harfbuzz-0.9.19.tar.bz2
+VERSION=harfbuzz-2.6.4
+EXTENSION=.tar.xz
+if [ ! -f /tmp/resources/${VERSION}${EXTENSION} ]; then \
+    wget http://www.freedesktop.org/software/harfbuzz/release/${VERSION}${EXTENSION} -P /tmp/resources/; \
     fi; \
     cd /tmp/resources &&\
-    tar xjf harfbuzz-0.9.19.tar.bz2  &&\
-    cd harfbuzz-0.9.19 && \
+    tar xf ${VERSION}${EXTENSION}  &&\
+    cd $VERSION && \
     ./configure  && \
     make  && \
     make install  && \
@@ -51,13 +53,4 @@ if [  ! -d /tmp/resources/mapserver ]; then \
 
 echo "ServerName localhost" >> /etc/apache2/apache2.conf
 echo '<?php phpinfo();' > /var/www/html/info.php
-
-
- 
-
-
-
-
-
-
 
