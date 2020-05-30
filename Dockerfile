@@ -1,19 +1,10 @@
 # Mapserver for Docker
-FROM osgeo/gdal:ubuntu-small-latest
-
+FROM ubuntu:focal
+#If you change ubuntu version, don't forget to change 3 echo lines 
 MAINTAINER Admire Nyakudya<admire@kartoza.com>
 
-ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get clean && apt-get update && apt-get install -y locales
 ENV LANG C.UTF-8
-RUN update-locale LANG=C.UTF-8
-
-RUN set -e \
-    export DEBIAN_FRONTEND=noninteractive \
-    dpkg-divert --local --rename --add /sbin/initctl \
-    && (echo "Yes, do as I say!" | apt-get remove --force-yes login) \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+#RUN update-locale LANG=C.UTF-8
 
 # Update and upgrade system
 RUN apt-get -qq update --fix-missing && apt-get -qq --yes upgrade
@@ -23,21 +14,14 @@ RUN apt-get -qq update --fix-missing && apt-get -qq --yes upgrade
 #-------------Application Specific Stuff ----------------------------------------------------
 
 # Install mapcache compilation prerequisites
-RUN apt-get install -y software-properties-common g++ make cmake wget git  bzip2 apache2 apache2-dev \
-build-essential  curl openssl autoconf gtk-doc-tools libc-ares-dev libc-ares-dev libpdf-api2-perl python3-pip \
-swig protobuf-compiler python-setuptools libprotobuf-c-dev protobuf-c-compiler
-
-
-RUN add-apt-repository -y ppa:ondrej/php
-RUN  apt-get update; apt install -y php7.3 php7.3-common php7.3-opcache php7.3-cli php7.3-gd php7.3-curl php7.3-fpm \
-libapache2-mod-php7.3   php7.3-fpm php php7.3-dev
-
-
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y software-properties-common g++ make cmake wget git  bzip2 apache2 curl #apache2-threaded-dev curl apache2-mpm-worker # doesn't exists anymore
+#DEBIAN_FRONTEND=noninteractive to solve problem with tzdata whitch needs 2 answers !
 
 # Install mapcache dependencies provided by Ubuntu repositories
-RUN apt-get install -y --fix-missing --no-install-recommends \
+RUN apt-get install -y \
     libxml2-dev \
     libxslt1-dev \
+    libproj-dev \
     libfribidi-dev \
     libcairo2-dev \
     librsvg2-dev \
@@ -45,19 +29,10 @@ RUN apt-get install -y --fix-missing --no-install-recommends \
     libpq-dev \
     libcurl4-gnutls-dev \
     libexempi-dev \
-    libfcgi-dev \
-    libpsl-dev \
-    libharfbuzz-dev \
-    libexempi-dev \
-    libgif-dev \
-    libfcgi-dev \
-    libjpeg62-dev \
-    libproj-dev \
-    libcairo2-dev \
-    libprotobuf-dev
+    libgdal-dev \
+    libgeos-dev \
+    gdal-bin
 
-ARG MAPSERVER_VERSION=branch-7-4
-#RUN apt -y install libboost-tools-dev libboost-thread1.62-dev magics++
 ADD resources /tmp/resources
 
 ADD setup.sh /setup.sh
@@ -65,24 +40,23 @@ RUN chmod 0755 /setup.sh
 RUN /setup.sh
 
 
-
 # Configure localhost in Apache
 RUN cp  /tmp/resources/000-default.conf /etc/apache2/sites-available/
 
-# To be able to install libapache.
+# To be able to install libapache. #Allready in source.list for ubuntu:focal
+#RUN echo 'deb http://archive.ubuntu.com/ubuntu focal multiverse' >> /etc/apt/sources.list
+#RUN echo 'deb http://archive.ubuntu.com/ubuntu focal-updates multiverse' >> /etc/apt/sources.list
+#RUN echo 'deb http://security.ubuntu.com/ubuntu focal-security multiverse' >> /etc/apt/sources.list
+#RUN  apt-get update
 
-
-
-
-
-# Apache configuration for PHP-FPM
-RUN cp /tmp/resources/php5-fpm.conf /etc/apache2/conf-available/
+# Install PHP7.4 and necessary modules
+RUN  apt-get install -y php7.4-fpm libapache2-mod-php7.4 php7.4-common php7.4-cli php7.4-fpm php7.4 #libapache2-mod-fastcgi doesn't exist anymore
 
 # Enable these Apache modules
-RUN  a2enmod actions  alias  proxy_fcgi setenvif
-RUN a2enconf php7.3-fpm
+RUN  a2enmod actions cgi alias
 
-RUN service apache2 restart
+# Apache configuration for PHP-FPM # No fastcgi anymore
+#RUN cp /tmp/resources/php5-fpm.conf /etc/apache2/conf-available/
 
 # Link to cgi-bin executable
 RUN chmod o+x /usr/local/bin/mapserv
@@ -91,7 +65,8 @@ RUN chmod 755 /usr/lib/cgi-bin
 
 EXPOSE  80
 
+#ifconfig not installed by default in focal
+RUN apt-get install -y net-tools
 ENV HOST_IP `ifconfig | grep inet | grep Mask:255.255.255.0 | cut -d ' ' -f 12 | cut -d ':' -f 2`
-RUN rm -r /tmp/resources
 
 CMD apachectl -D FOREGROUND
