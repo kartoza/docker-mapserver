@@ -4,24 +4,23 @@ FROM ubuntu:focal
 MAINTAINER Admire Nyakudya<admire@kartoza.com>
 
 ENV LANG C.UTF-8
-#RUN update-locale LANG=C.UTF-8
 
 # Update and upgrade system
 RUN apt-get -qq update --fix-missing && apt-get -qq --yes upgrade
 
-#ADD 71-apt-cacher-ng /etc/apt/apt.conf.d/71-apt-cacher-ng
 
 #-------------Application Specific Stuff ----------------------------------------------------
 
 # Install mapcache compilation prerequisites
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y software-properties-common g++ make cmake wget git  bzip2 apache2 curl #apache2-threaded-dev curl apache2-mpm-worker # doesn't exists anymore
-#DEBIAN_FRONTEND=noninteractive to solve problem with tzdata whitch needs 2 answers !
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y software-properties-common g++ make \
+cmake wget git  bzip2 apache2 curl apache2-dev \
+build-essential   openssl autoconf gtk-doc-tools libc-ares-dev libc-ares-dev libpdf-api2-perl python3-pip \
+swig protobuf-compiler python-setuptools libprotobuf-c-dev protobuf-c-compiler libcurl4
 
 # Install mapcache dependencies provided by Ubuntu repositories
-RUN apt-get install -y \
+RUN apt-get install -y --fix-missing --no-install-recommends \
     libxml2-dev \
     libxslt1-dev \
-    libproj-dev \
     libfribidi-dev \
     libcairo2-dev \
     librsvg2-dev \
@@ -29,12 +28,26 @@ RUN apt-get install -y \
     libpq-dev \
     libcurl4-gnutls-dev \
     libexempi-dev \
-    libgdal-dev \
-    libgeos-dev \
+    libfcgi-dev \
+    libpsl-dev \
+    libharfbuzz-dev \
+    libexempi-dev \
+    libgif-dev \
+    libfcgi-dev \
+    libjpeg62-dev \
+    libproj-dev \
+    libcairo2-dev \
+    libprotobuf-dev \
     gdal-bin
 
-ADD resources /tmp/resources
+RUN apt-get install -y libgdal-dev
 
+# Install PHP7.4 and necessary modules
+RUN  apt-get install -y php7.4-fpm libapache2-mod-php7.4 php7.4-common php7.4-cli  php7.4 \
+php7.4  php7.4-opcache  php7.4-gd php7.4-curl php7.4-fpm php7.4-dev php7.4-mysql php7.4-mbstring  php7.4-xml
+
+ADD resources /tmp/resources
+ARG MAPSERVER_VERSION=branch-7-6
 ADD setup.sh /setup.sh
 RUN chmod 0755 /setup.sh
 RUN /setup.sh
@@ -42,18 +55,16 @@ RUN /setup.sh
 
 # Configure localhost in Apache
 RUN cp  /tmp/resources/000-default.conf /etc/apache2/sites-available/
+RUN wget http://mirrors.kernel.org/ubuntu/pool/multiverse/liba/libapache-mod-fastcgi/libapache2-mod-fastcgi_2.4.7~0910052141-1.2_amd64.deb \
+-O libapache2-mod-fastcgi.deb && dpkg -i libapache2-mod-fastcgi.deb && apt install -f;rm libapache2-mod-fastcgi.deb
 
-# To be able to install libapache. #Allready in source.list for ubuntu:focal
-#RUN echo 'deb http://archive.ubuntu.com/ubuntu focal multiverse' >> /etc/apt/sources.list
-#RUN echo 'deb http://archive.ubuntu.com/ubuntu focal-updates multiverse' >> /etc/apt/sources.list
-#RUN echo 'deb http://security.ubuntu.com/ubuntu focal-security multiverse' >> /etc/apt/sources.list
-#RUN  apt-get update
 
-# Install PHP7.4 and necessary modules
-RUN  apt-get install -y php7.4-fpm libapache2-mod-php7.4 php7.4-common php7.4-cli php7.4-fpm php7.4 #libapache2-mod-fastcgi doesn't exist anymore
+
+
 
 # Enable these Apache modules
 RUN  a2enmod actions cgi alias
+RUN a2enmod actions fastcgi alias proxy_fcgi cgi
 
 # Apache configuration for PHP-FPM # No fastcgi anymore
 #RUN cp /tmp/resources/php5-fpm.conf /etc/apache2/conf-available/

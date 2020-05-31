@@ -2,20 +2,21 @@
 version: '2.1'
 
 volumes:
-   db-backups:
-   mapserver-data:
    sld:
    db-data:
 
 services:
    db:
-      image: kartoza/postgis:11.0-2.5
+      image: kartoza/postgis:12.0
       volumes:
          - db-data:/var/lib/postgresql
       ports:
         - "25434:5432"
-      env_file:
-      - db.env
+      environment:
+        - POSTGRES_DB=gis
+        - POSTGRES_USER=docker
+        - POSTGRES_PASS=docker
+        - ALLOW_IP_RANGE=0.0.0.0/0
       restart: on-failure
       healthcheck:
         test: "exit 0"
@@ -23,7 +24,7 @@ services:
    mapserver:
       image: kartoza/mapserver
       volumes:
-        - mapserver-data:/web
+        - ./map:/map
         - sld:/sld
       ports:
         - "8182:8080"
@@ -38,13 +39,13 @@ services:
         retries: 3
 
 
-   db-dbbackups:
-     image: kartoza/pg-backup:11.0
+   mapproxy:
+     image: kartoza/mapproxy
      volumes:
-     - db-backups:/backups
-     env_file:
-     - db-backups.env
+     - mapproxy:/mapproxy
      restart: on-failure
+     ports:
+     - 8183:8080
      depends_on:
-       db:
+       mapserver:
          condition: service_healthy
