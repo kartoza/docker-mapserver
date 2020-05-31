@@ -58,10 +58,6 @@ RUN cp  /tmp/resources/000-default.conf /etc/apache2/sites-available/
 RUN wget http://mirrors.kernel.org/ubuntu/pool/multiverse/liba/libapache-mod-fastcgi/libapache2-mod-fastcgi_2.4.7~0910052141-1.2_amd64.deb \
 -O libapache2-mod-fastcgi.deb && dpkg -i libapache2-mod-fastcgi.deb && apt install -f;rm libapache2-mod-fastcgi.deb
 
-
-
-
-
 # Enable these Apache modules
 RUN  a2enmod actions cgi alias
 RUN a2enmod actions fastcgi alias proxy_fcgi cgi
@@ -75,9 +71,16 @@ RUN ln -s /usr/local/bin/mapserv /usr/lib/cgi-bin/mapserv
 RUN chmod 755 /usr/lib/cgi-bin
 
 EXPOSE  80
+ENV DOCKERIZE_VERSION v0.6.1
+RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+    && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+    && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
 #ifconfig not installed by default in focal
 RUN apt-get install -y net-tools
 ENV HOST_IP `ifconfig | grep inet | grep Mask:255.255.255.0 | cut -d ' ' -f 12 | cut -d ':' -f 2`
 
-CMD apachectl -D FOREGROUND
+# Fix php startup error https://stackoverflow.com/questions/59993170/php-7-4-and-ubuntu-18-php-startup-unable-to-load-dynamic-library-curl-so
+RUN mv /usr/local/lib/libcurl.so.4.4.0 /usr/local/lib/libcurl.so.4.4.0.backup
+
+CMD ["dockerize", "-stdout", "/var/log/apache2/access.log", "-stderr", "/var/log/apache2/error.log", "apachectl", "-D", "FOREGROUND"]
