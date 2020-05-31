@@ -4,6 +4,7 @@ version: '2.1'
 volumes:
    sld:
    db-data:
+   mapproxy:
 
 services:
    db:
@@ -27,7 +28,7 @@ services:
         - ./map:/map
         - sld:/sld
       ports:
-        - "8182:8080"
+        - "8182:80"
       restart: on-failure
       depends_on:
         db:
