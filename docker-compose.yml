@@ -1,6 +1,52 @@
-mapserver:
-  image: kartoza/mapserver
-  volumes:
-    - ./web/:/map
-  ports:
-    - "8182:80"
+
+version: '2.1'
+
+volumes:
+   sld:
+   db-data:
+   mapproxy:
+
+services:
+   db:
+      image: kartoza/postgis:12.0
+      volumes:
+         - db-data:/var/lib/postgresql
+      ports:
+        - "25434:5432"
+      environment:
+        - POSTGRES_DB=gis
+        - POSTGRES_USER=docker
+        - POSTGRES_PASS=docker
+        - ALLOW_IP_RANGE=0.0.0.0/0
+      restart: on-failure
+      healthcheck:
+        test: "exit 0"
+
+   mapserver:
+      image: kartoza/mapserver
+      volumes:
+        - ./map:/map
+        - sld:/sld
+      ports:
+        - "8182:80"
+      restart: on-failure
+      depends_on:
+        db:
+          condition: service_healthy
+      healthcheck:
+        test: curl --fail -s http://localhost:80/ || exit 1
+        interval: 1m30s
+        timeout: 10s
+        retries: 3
+
+
+   mapproxy:
+     image: kartoza/mapproxy
+     volumes:
+     - mapproxy:/mapproxy
+     restart: on-failure
+     ports:
+     - 8183:8080
+     depends_on:
+       mapserver:
+         condition: service_healthy

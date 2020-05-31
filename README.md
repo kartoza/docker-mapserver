@@ -1,18 +1,19 @@
-# mapserver
+# Mapserver
 
 Docker container for Mapserver
 
-## build image
+## Build image
 
-```docker build -t mapserver .```
+```docker build  -t kartoza/mapserver .```
+or using the build script
+```
+./build.sh
+```
 
-## start container
-```docker run -d -p 8182:80 -v `pwd`/map:/map mapserver```
+## Start container
+```docker run -d -p 8182:80 --name mapserver -v `pwd`/map:/map kartoza/mapserver```
 
-while the command is<br/>
-`docker run -d -p [exposed port]:[internal port] -v [your-path]:[container-path] mapserver` 
-
-## access container via http
+## Access container via http
 
 When Docker is forwarded as _localhost_ simply open the following URL:<br/> 
 `http://localhost:8182/cgi-bin/mapserv`
@@ -31,10 +32,10 @@ The displayed map should look like that:<br/>
 
 Replace generic.map with the name of your mapserver mapfile.
 
-## enter container via bash
+## Enter container via bash
 
 To enter the container with a bash interface simple switch from _daemon_ mode to _interactive_ mode<br/>
-```docker run -it -v `pwd`/map:/map mapserver bash```
+```docker run -it -v `pwd`/map:/map kartoza/mapserver bash```
 
 There you'll see the mapped /map folder and can use the useful cli tool like 
 * `mapserv` http://www.mapserver.org/utilities/
