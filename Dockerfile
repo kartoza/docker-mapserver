@@ -46,6 +46,7 @@ RUN apt-get install -y libgdal-dev
 RUN  apt-get install -y php7.4-fpm libapache2-mod-php7.4 php7.4-common php7.4-cli  php7.4 \
 php7.4  php7.4-opcache  php7.4-gd php7.4-curl php7.4-fpm php7.4-dev php7.4-mysql php7.4-mbstring  php7.4-xml
 
+# Compile mapserver and associated resources
 ADD resources /tmp/resources
 ARG MAPSERVER_VERSION=branch-7-6
 ADD setup.sh /setup.sh
@@ -58,12 +59,12 @@ RUN cp  /tmp/resources/000-default.conf /etc/apache2/sites-available/
 RUN wget http://mirrors.kernel.org/ubuntu/pool/multiverse/liba/libapache-mod-fastcgi/libapache2-mod-fastcgi_2.4.7~0910052141-1.2_amd64.deb \
 -O libapache2-mod-fastcgi.deb && dpkg -i libapache2-mod-fastcgi.deb && apt install -f;rm libapache2-mod-fastcgi.deb
 
-# Enable these Apache modules
-RUN  a2enmod actions cgi alias
-RUN a2enmod actions fastcgi alias proxy_fcgi cgi
-
 # Apache configuration for PHP-FPM # No fastcgi anymore
-#RUN cp /tmp/resources/php5-fpm.conf /etc/apache2/conf-available/
+RUN cp /tmp/resources/php7-fpm.conf /etc/apache2/conf-available/
+
+# Enable these Apache modules
+RUN a2enmod actions  cgi alias proxy_fcgi  fastcgi
+RUN a2enconf php7.4-fpm
 
 # Link to cgi-bin executable
 RUN chmod o+x /usr/local/bin/mapserv
@@ -82,5 +83,8 @@ ENV HOST_IP `ifconfig | grep inet | grep Mask:255.255.255.0 | cut -d ' ' -f 12 |
 
 # Fix php startup error https://stackoverflow.com/questions/59993170/php-7-4-and-ubuntu-18-php-startup-unable-to-load-dynamic-library-curl-so
 RUN mv /usr/local/lib/libcurl.so.4.4.0 /usr/local/lib/libcurl.so.4.4.0.backup
+
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+EXPOSE 9000
 
 CMD ["dockerize", "-stdout", "/var/log/apache2/access.log", "-stderr", "/var/log/apache2/error.log", "apachectl", "-D", "FOREGROUND"]
