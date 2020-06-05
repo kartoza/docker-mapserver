@@ -85,6 +85,6 @@ ENV HOST_IP `ifconfig | grep inet | grep Mask:255.255.255.0 | cut -d ' ' -f 12 |
 RUN mv /usr/local/lib/libcurl.so.4.4.0 /usr/local/lib/libcurl.so.4.4.0.backup
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-EXPOSE 9000
+
 
 CMD ["dockerize", "-stdout", "/var/log/apache2/access.log", "-stderr", "/var/log/apache2/error.log", "apachectl", "-D", "FOREGROUND"]
