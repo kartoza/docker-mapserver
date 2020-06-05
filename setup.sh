@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#Install libharfbuzz from source as it is not in a repository
+#Install curl from source
 if [[ ! -f /tmp/resources/curl-7.50.0.tar.gz ]]; then \
   wget -c https://curl.haxx.se/download/curl-7.50.0.tar.gz -P /tmp/resources/; \
 fi;\
