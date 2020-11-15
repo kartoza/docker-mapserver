@@ -78,3 +78,6 @@ if [  ! -d /tmp/resources/mapserver ]; then \
 echo "ServerName localhost" >> /etc/apache2/apache2.conf
 echo '<?php phpinfo();' > /var/www/html/info.php
 
+rm -rf /tmp/resources/mapserver /tmp/resources/geos-${GEOS_VERSION}.tar.bz2 \
+/tmp/resources/${VERSION}${EXTENSION}
+
