@@ -63,7 +63,7 @@ RUN wget http://mirrors.kernel.org/ubuntu/pool/multiverse/liba/libapache-mod-fas
 RUN cp /tmp/resources/php7-fpm.conf /etc/apache2/conf-available/
 
 # Enable these Apache modules
-RUN a2enmod actions  cgi alias proxy_fcgi  fastcgi
+RUN a2enmod actions  cgi alias proxy_fcgi  fastcgi headers
 RUN a2enconf php7.4-fpm
 
 # Link to cgi-bin executable
